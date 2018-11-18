@@ -1,5 +1,11 @@
 # Measuring the Impact of AutoAugment on Classification Performance for Additional Image Datasets
 
+### Milestone 1 Results 
+
+The results for Milestone 1 are can be found at https://github.com/rounakmehta/autoaugment_performance/blob/master/paper/Milestone%201%20Results.ipynb
+
+### Intro
+
 AutoAugment authors show how automatically selected policies for data augmentation can improve on benchmark classifier performance on CIFAR-10, CIFAR- 100, SVHN, and ImageNet datasets. This repo contains code that can be used to reproduce results presented by Team 18 as part of the final project for COMS 4995.  
 
 We aim to understand the impact of a AutoAugment approach on additional image datasets through :
@@ -36,9 +42,6 @@ curl -o cifar-100-binary.tar.gz https://www.cs.toronto.edu/~kriz/cifar-100-binar
 
 3. Download Kaggle Datasets to the respective directories. These instructions can be found in the data_readme.txt files in teach of the sub directories of the transfer_learning directory
 
-### Milestone 1 Results 
-
-The results for Milestone 1 are can be found at https://github.com/rounakmehta/autoaugment_performance/blob/master/paper/Milestone%201%20Results.ipynb
 
 ## Authors
 
