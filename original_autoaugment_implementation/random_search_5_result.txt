@@ -1,0 +1,6 @@
+INFO:tensorflow:Restoring parameters from /tmp/training/model/model.ckpt-199
+INFO:tensorflow:Loaded child model checkpoint from /tmp/training/model/model.ckpt-199
+INFO:tensorflow:model.batch_size is 25
+INFO:tensorflow:Eval child model accuracy: 0.966199994087
+INFO:tensorflow:Test Accuracy: 0.966199994087
+INFO:tensorflow:Train Acc: None    Valid Acc: 0.0     Test Acc: 0.966199994087
