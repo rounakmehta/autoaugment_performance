@@ -15,6 +15,7 @@ The additional datasets considered are the “Iceberg” dataset from the Kaggle
 The repo is organised as follows: 
 
 * original_autoaugment_implementation : clone of the github repo with the original paper
+* paper : contains reports and results for submissions 
 * random_search : modified code to implement random search to find optimal policies
 * rpmcruz-autoaugment: clone of rpmcruz/autoaugment repo
 * transfer_learning/iceberg :  Kaggle datasets and baseline kernels for “Statoil/C-CORE Iceberg Classifier” Challenge
