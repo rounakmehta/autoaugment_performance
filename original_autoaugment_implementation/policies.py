@@ -18,6 +18,53 @@ from __future__ import division
 from __future__ import print_function
 
 def good_policies():
+  """AutoAugment policies found on Cifar."""
+  exp0_0 = [
+[('Sharpness', 0.100, 1.900),('ShearY', 0.000, -0.300)],
+[('Equalize', 0.700, 0.111),('Color', 0.500, 1.500)],
+[('Equalize', 0.300, 0.667),('Brightness', 0.500, 1.700)],
+[('AutoContrast', 1.000, 0.778),('TranslateX', 0.300, -0.450)],
+[('Sharpness', 0.100, 1.500),('Equalize', 0.900, 0.889)]
+]
+
+  exp0_1 = [
+[('Equalize', 0.300, 0.778),('Contrast', 0.100, 0.500)],
+[('TranslateX', 0.000, 0.450),('Posterize', 1.000, 7.556)],
+[('Brightness', 0.500, 0.500),('Solarize', 0.600, 56.889)],
+[('ShearY', 0.100, 0.167),('AutoContrast', 0.600, 0.889)],
+[('Equalize', 0.600, 0.444),('Invert', 0.000, 0.889)]
+]
+
+  exp0_2 = [
+[('ShearX', 0.300, -0.233),('Cutout', 0.700, 0.000)],
+[('Brightness', 0.600, 1.700),('AutoContrast', 0.900, 0.111)],
+[('Brightness', 0.200, 1.100),('Equalize', 0.000, 0.111)],
+[('Brightness', 0.900, 0.700),('Color', 0.500, 1.700)],
+[('SamplePairing(imgs)', 0.300, 0.267),('ShearY', 0.600, 0.233)]
+]
+
+
+  exp0_3 = [
+[('ShearX', 0.300, 0.100),('AutoContrast', 0.500, 0.667)],
+[('Brightness', 1.000, 0.500),('Solarize', 0.300, 28.444)],
+[('Cutout', 0.600, 0.156),('ShearY', 1.000, -0.100)],
+[('Contrast', 0.600, 0.700),('ShearY', 0.700, 0.300)],
+[('Brightness', 0.300, 1.700),('Cutout', 0.100, 0.044)]
+]
+
+  exp0_4 = [
+[('Sharpness', 0.600, 0.900),('Brightness', 0.300, 1.700)],
+[('Invert', 0.800, 0.556),('TranslateY', 0.600, 0.050)],
+[('Posterize', 0.100, 4.889),('ShearX', 0.000, -0.233)],
+[('Solarize', 0.600, 113.778),('AutoContrast', 0.300, 1.000)],
+[('Color', 1.000, 0.700),('Equalize', 0.600, 1.000)]
+]
+  exp0s = exp0_0 + exp0_1 + exp0_2 + exp0_3 + exp0_4
+  return exp0s
+
+
+
+def good_policies_5():
   exp0_0 = [ [('Brightness', 0.1, 1.9), ('ShearX', 0.0, -0.3)], 
 [('Invert', 0.7, 0.111), ('Contrast', 0.5, 1.5)], 
 [('Invert', 0.3, 0.667), ('Color', 0.5, 1.7)], 
