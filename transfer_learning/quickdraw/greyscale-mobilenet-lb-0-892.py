@@ -127,6 +127,13 @@ print(model.summary())
 # In[8]:
 
 
+from shvn_policies import good_policies
+from augmentation_transforms import *
+
+my_policies = good_policies()
+
+test = None
+
 def draw_cv2(raw_strokes, size=256, lw=6, time_color=True):
     img = np.zeros((BASE_SIZE, BASE_SIZE), np.uint8)
     for t, stroke in enumerate(raw_strokes):
@@ -140,6 +147,7 @@ def draw_cv2(raw_strokes, size=256, lw=6, time_color=True):
         return img
 
 def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
+    global test
     while True:
         for k in np.random.permutation(ks):
             filename = os.path.join(DP_DIR, 'train_k{}.csv.gz'.format(k))
@@ -150,8 +158,21 @@ def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
                     x[i, :, :, 0] = draw_cv2(raw_strokes, size=size, lw=lw,
                                              time_color=time_color)
                 x = preprocess_input(x).astype(np.float32)
+                #print(x.shape)
+                epoch_policy = my_policies[np.random.choice(len(my_policies))]
+                
+                transformed_x = []
+                for i in range(batchsize):
+                    x3 = np.dstack((x[i],x[i],x[i]))
+                    final_img = apply_policy(epoch_policy, x3)
+                
+                    sing_img = final_img[:,:,0]
+                    sing_img = np.reshape(sing_img,(64,64,1))
+                    transformed_x.append(sing_img)
+                
+                #test = transformed_x
                 y = keras.utils.to_categorical(df.y, num_classes=NCATS)
-                yield x, y
+                yield np.asarray(transformed_x), y
 
 def df_to_image_array_xd(df, size, lw=6, time_color=True):
     df['drawing'] = df['drawing'].apply(ast.literal_eval)
