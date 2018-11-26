@@ -104,14 +104,15 @@ def top_3_accuracy(y_true, y_pred):
 
 
 STEPS = 80
-#STEPS = 800
+STEPS = 800
 EPOCHS = 1
-#EPOCHS = 16
+EPOCHS = 5 
 
 
 size = 64
 batchsize = 680
 
+augment = False 
 
 # In[7]:
 
@@ -132,7 +133,7 @@ from augmentation_transforms import *
 
 my_policies = good_policies()
 
-test = None
+cnt = 0
 
 def draw_cv2(raw_strokes, size=256, lw=6, time_color=True):
     img = np.zeros((BASE_SIZE, BASE_SIZE), np.uint8)
@@ -146,11 +147,15 @@ def draw_cv2(raw_strokes, size=256, lw=6, time_color=True):
     else:
         return img
 
+import pickle
+
+
 def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
-    global test
+    global cnt 
     while True:
         for k in np.random.permutation(ks):
             filename = os.path.join(DP_DIR, 'train_k{}.csv.gz'.format(k))
+            chunk = 0
             for df in pd.read_csv(filename, chunksize=batchsize):
                 df['drawing'] = df['drawing'].apply(ast.literal_eval)
                 x = np.zeros((len(df), size, size, 1))
@@ -160,17 +165,21 @@ def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
                 x = preprocess_input(x).astype(np.float32)
                 #print(x.shape)
                 epoch_policy = my_policies[np.random.choice(len(my_policies))]
-                
+               
+                chunk += 1 
                 transformed_x = []
-                for i in range(batchsize):
-                    x3 = np.dstack((x[i],x[i],x[i]))
-                    final_img = apply_policy(epoch_policy, x3)
+               
+                if augment:
+                    for i in range(x.shape[0]):
+                        x3 = np.dstack((x[i],x[i],x[i]))
+                        final_img = apply_policy(epoch_policy, x3)
                 
-                    sing_img = final_img[:,:,0]
-                    sing_img = np.reshape(sing_img,(64,64,1))
-                    transformed_x.append(sing_img)
-                
-                #test = transformed_x
+                        sing_img = final_img[:,:,0]
+                        sing_img = np.reshape(sing_img,(64,64,1))
+                        transformed_x.append(sing_img)
+                else:
+                    transformed_x = x  
+                #transformed_x = x
                 y = keras.utils.to_categorical(df.y, num_classes=NCATS)
                 yield np.asarray(transformed_x), y
 
@@ -230,7 +239,7 @@ hist = model.fit_generator(
 )
 hists.append(hist)
 
-
+print('cnt=%s' % cnt)
 # In[11]:
 
 
