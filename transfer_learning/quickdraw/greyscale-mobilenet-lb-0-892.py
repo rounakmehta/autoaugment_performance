@@ -112,7 +112,7 @@ EPOCHS = 5
 size = 64
 batchsize = 680
 
-augment = False 
+augment = True 
 
 # In[7]:
 
