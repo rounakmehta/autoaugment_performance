@@ -128,7 +128,7 @@ print(model.summary())
 # In[8]:
 
 
-from shvn_policies import good_policies
+from cifar10_policies import good_policies
 from augmentation_transforms import *
 
 my_policies = good_policies()
