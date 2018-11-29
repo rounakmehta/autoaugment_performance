@@ -16,7 +16,7 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adam
 
-from shvn_policies import good_policies
+from svhn_select_policies import good_policies
 from augmentation_transforms import *
 
 my_policies = good_policies()
