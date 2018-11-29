@@ -1,6 +1,6 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  17 NOV 2018 16:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  29 NOV 2018 15:54
 entering extended mode
- restricted \write18 enabled.
+ \write18 enabled.
  %&-line parsing enabled.
 **milestone1.tex
 (./milestone1.tex
@@ -428,7 +428,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 166.
 Here is how much of TeX's memory you used:
  6390 strings out of 492649
  92405 string characters out of 6129622
- 187639 words of memory out of 5000000
+ 187638 words of memory out of 5000000
  10164 multiletter control sequences out of 15000+600000
  24536 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
