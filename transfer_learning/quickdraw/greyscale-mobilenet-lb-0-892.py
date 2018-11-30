@@ -181,6 +181,7 @@ def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
                     transformed_x = x  
                 #transformed_x = x
                 y = keras.utils.to_categorical(df.y, num_classes=NCATS)
+                yield np.asarray(x), y
                 yield np.asarray(transformed_x), y
 
 def df_to_image_array_xd(df, size, lw=6, time_color=True):
