@@ -77,7 +77,7 @@ The datasets that met these criteria include:
 
 \begin{itemize}
   \item \textbf{Iceberg Dataset}.  This is an image dataset from the Kaggle “Statoil/C-CORE Iceberg Classifier” Challenge.  It contains 1,674 "images" of icebergs and ships that come from radar readings.  
-  \item \textbf{Human Protein Dataset}.  This is an image dataset from the Kaggle “Human Protein Atlas Image Classification” Challenge.   It contains 31,072 images of human proteins that are classified into 28 categories (each protein can have more than one  category. )
+  \item \textbf{QuickDraw Dataset}.  TODO: Add Description
   \item \textbf{CIFAR-10 Dataset}.  This is the same dataset used by the authors [1].  We use this for comparing the Simplified AutoAugment performance to that of the Reinforcement Learning AutoAugment.  Although this dataset is not a Kaggle dataset, it is labeled, relatively small, and has many classifier baselines as specified in the AutoAugment paper [1].        
 \end{itemize}
 
@@ -122,13 +122,14 @@ On the other hand, the improvements from using SVHN augmentations are almost twi
 
 
 
-\subsection{Human Protein Dataset}
+\subsection{QuickDraw Dataset}
 
-For this milestone, we investigated the feasibility of using the dataset from the Kaggle “Human Protein Atlas Image Classification", but we haven not yet applied the CIFAR-10 and SVHN transfer policies as we did with the Iceberg dataset.  We have, however, chosen a classifier baseline based on a Kaggle Kernel called "Pretrained ResNet34 with RGBY" by Kaggle user lafoss.  This baseline classifier (with augmentations from the Kernel author) achieves a Macro F1 Score of 0.460 on the competition's public holdout set.  
+\begin{figure}[bhp]
+\includegraphics[width=\columnwidth]{quickdraw_results.png}
+\caption{Results When Transfering Full and Partial SVHN Policies to Training on Iceberg Dataset}
+\end{figure}
 
-For the final paper, we will remove the augmentations from this Kernel, then apply the CIFAR-10 and SVHN transfer policies as we did for the Iceberg dataset.  Details to come in the final paper.
-
-\section{Preliminary Results - Simplified AutoAugment}
+\section{Results - Simplified AutoAugment}
 
 
 In our original proposal, we had planned to apply the AutoAugment [1] using the same Reinforcement Learning approach for finding the best policies that was suggested in the paper.  That proved to be difficult due to insufficient details in the paper, such as the number of epochs used in the Controller.  It would also require extensive computational resources to reproduce the exact results in the paper.
