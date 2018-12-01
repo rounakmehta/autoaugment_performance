@@ -72,6 +72,11 @@ def getTestDataset():
 
 # credits: https://github.com/keras-team/keras/blob/master/keras/utils/data_utils.py#L302
 # credits: https://stanford.edu/~shervine/blog/keras-how-to-generate-data-on-the-fly
+from cifar10_policies import good_policies
+from augmentation_transforms import *
+
+my_policies = good_policies()
+
 
 class ProteinDataGenerator(keras.utils.Sequence):
             
@@ -108,8 +113,18 @@ class ProteinDataGenerator(keras.utils.Sequence):
                 X[i] = self.__load_image(path)
 
         y = self.labels[indexes]
+        
+        #img = np.float32(i[0][0]*255)
+        
+        transformed_X = []
+        for x in X:
+            epoch_policy = my_policies[np.random.choice(len(my_policies))]
+            final_img = apply_policy(epoch_policy, x)
+            transformed_X.append(final_img)
+            
+        output = np.reshape(transformed_X,(X.shape[0],192,192,4))
                 
-        return X, y
+        return output, y
     
     def on_epoch_end(self):
         
