@@ -170,7 +170,7 @@ def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
                 chunk += 1 
                 transformed_x = []
                
-                if augment:
+                if False:
                     for i in range(x.shape[0]):
                         x3 = np.dstack((x[i],x[i],x[i]))
                         final_img = apply_policy(epoch_policy, x3)
