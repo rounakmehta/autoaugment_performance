@@ -26,7 +26,7 @@
 \begin{document}
 
 %%%%%%%%% TITLE
-\title{Measuring the Impact of AutoAugment on Classification Performance for Additional Image Datasets}
+\title{Practical AutoAugment: Measuring the Impact of AutoAugment on Classification Performance for Additional Image Datasets}
 
 \author{Quoc N. Le, Rounak Mehta, Vikram Natarajan, Anna Novakovska\\
 Columbia University\\
@@ -39,16 +39,11 @@ Columbia University\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-The AutoAugment [1] authors show how automatically-selected policies for data augmentation can improve on benchmark classifier performance on CIFAR-10, CIFAR-100, SVHN, and ImageNet datasets.  In this paper, we aim to understand the impact of a AutoAugment approach on additional image datasets through (A) “transfer learning” of optimal policies found by AutoAugment for CIFAR-10 and SVHN and (B) optimal policy search on these additional image datasets using a “Simplified” AutoAugment approach based on Random Search.  
+The AutoAugment [1] authors show how automatically-selected policies for data augmentation can improve on benchmark classifier performance on CIFAR-10, CIFAR-100, SVHN, and ImageNet datasets.  In this paper, we put ourselves in the shoes of practioners seeking to use AutoAugment to improve image classification performance on their own real-world datasets.
 
-The additional datasets considered are the “Iceberg” dataset from the Kaggle “Statoil/C-CORE Iceberg Classifier” Challenge and the “Human Protein” dataset from the Kaggle “Human Protein Atlas Image Classification” Challenge. We also use CIFAR-10 and CIFAR-100 to benchmark the Simplified AutoAugment approach explored in this paper.
+The first approach to unlocking the value of AutoAugment, as shown by the original paper authors [1], is to "transfer" augmentation policies found for CIFAR-10, SVHN, etc to our own image datasets.  We report mixed results for using transfer learning approach on two additional image datasets: the “Iceberg” dataset from the Kaggle “Statoil/C-CORE Iceberg Classifier Challenge" and the "QuickDraw" dataset from the Kaggle "Quick, Draw! Doodle Recognition Challenge".  For the Iceberg dataset we achieved immediate gains by (1) transfering CIFAR-10 policies which resulted in a 2.6 percent improvement in log loss of our baseline, (2) transfering SVHN policies directly which resulted in a 5.1 percent improvement over our baseline, and (3) transfering manually selected SVHN policies which resulted in a 15.1 percent improvement over our baseline.  For the QuickDraw dataset, however, we did not measure any gains, in fact we struggled to improve our baseline using augmentation.  Our conclusion is that gains from transfer learning using AutoAugment depends on the dataset, although the gains can be impressive and very straightforward as they were with the Iceberg dataset.  Therefore, practioners should certainly consider AutoAugment transfer in their model optimization.
 
-For Transfer Learning, in this milestone we were able to show that AutoAugment policies learned from CIFAR-10 and SVHN transferred to the Iceberg dataset, improving our baseline classifier performance by 2.6 percent and 5.1 percent respectively.  For the final paper, we plan to conduct the same transfer learning tests on the Human Protein dataset.  
-
-For Simplified AutoAugment, in this milestone we implemented a “Random Search Controller” which is a simplification on the original papers  [1] Reinforcement Learning Controller (the mechanism for suggesting good policies).  This discovered alternative good policies which, in our final paper, we will test against the Reinforcement Learning Controller on the CIFAR-10 dataset.
-
-In the final paper, we also plan to compare the “optimal” policies from Simplified AutoAugment against the performance of transfer policies on the Iceberg and Human Protein datasets.
-
+The second approach to unlocking value in AutoAugment is to leverage the AutoAugment [1] reinforcement learning framework to discover optimal policies on additional datasets.  We found that it is difficult to reproduce the reinforcement learning implementation described in the paper, due to lack of GPU resources and no code reference for that implementation.  We instead developed an approach we call Simplified AutoAugment, where we implemented a “Random Search Controller” which is a simplification on the Reinforcement Learning Controller, or mechanism for suggesting good policies, in the original paper [1].  We find that our Random Search Controller is able to achieve 3.40 percent error on the CIFAR-10 Wide-Res-Net benchmark, which is an improvement on the no-augmentation baseline of 3.87 percent.  However, the Random Search Controller does not do as well as the Reinforcement Learning Controller from [1], which has a 2.68 percent error rate.  Still, we conclude that an Random Search approach can provide a practical alternative for practioners for automatically finding augmentation policies that improve on a classifier baseline.
 
 \end{abstract}
 
