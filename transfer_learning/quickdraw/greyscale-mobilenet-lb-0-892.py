@@ -151,7 +151,8 @@ import pickle
 
 
 def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
-    global cnt 
+    global cnt
+    global augment 
     while True:
         for k in np.random.permutation(ks):
             filename = os.path.join(DP_DIR, 'train_k{}.csv.gz'.format(k))
@@ -181,7 +182,6 @@ def image_generator_xd(size, batchsize, ks, lw=6, time_color=True):
                     transformed_x = x  
                 #transformed_x = x
                 y = keras.utils.to_categorical(df.y, num_classes=NCATS)
-                yield np.asarray(x), y
                 yield np.asarray(transformed_x), y
 
 def df_to_image_array_xd(df, size, lw=6, time_color=True):
@@ -233,6 +233,8 @@ callbacks = [
                       min_delta=0.005, mode='max', cooldown=3, verbose=1)
 ]
 hists = []
+
+augment = False
 hist = model.fit_generator(
     train_datagen, steps_per_epoch=STEPS, epochs=EPOCHS, verbose=1,
     validation_data=(x_valid, y_valid),
@@ -244,6 +246,7 @@ print('cnt=%s' % cnt)
 # In[11]:
 
 
+augment = True
 hist = model.fit_generator(
     train_datagen, steps_per_epoch=STEPS, epochs=EPOCHS, verbose=1,
     validation_data=(x_valid, y_valid),
@@ -254,7 +257,7 @@ hists.append(hist)
 
 # In[12]:
 
-
+augment = False
 hist = model.fit_generator(
     train_datagen, steps_per_epoch=STEPS, epochs=EPOCHS, verbose=1,
     validation_data=(x_valid, y_valid),
