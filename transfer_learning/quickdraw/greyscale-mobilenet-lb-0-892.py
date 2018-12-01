@@ -128,7 +128,7 @@ print(model.summary())
 # In[8]:
 
 
-from svhn_noncolor_policies import good_policies
+from svhn_strict_pos_policies import good_policies
 from augmentation_transforms import *
 
 my_policies = good_policies()
@@ -223,6 +223,17 @@ for i in range(n**2):
 plt.tight_layout()
 fig.savefig('gs.png', dpi=300)
 
+augment=True
+x, y = next(train_datagen)
+n = 8
+fig, axs = plt.subplots(nrows=n, ncols=n, sharex=True, sharey=True, figsize=(12, 12))
+for i in range(n**2):
+    ax = axs[i // n, i % n]
+    (-x[i]+1)/2
+    ax.imshow((-x[i, :, :, 0] + 1)/2, cmap=plt.cm.gray)
+    ax.axis('off')
+plt.tight_layout()
+fig.savefig('gs2.png', dpi=300)
 
 
 # In[10]:
@@ -234,7 +245,7 @@ callbacks = [
 ]
 hists = []
 
-augment = False
+augment = True 
 hist = model.fit_generator(
     train_datagen, steps_per_epoch=STEPS, epochs=EPOCHS, verbose=1,
     validation_data=(x_valid, y_valid),
@@ -257,7 +268,7 @@ hists.append(hist)
 
 # In[12]:
 
-augment = False
+augment =True 
 hist = model.fit_generator(
     train_datagen, steps_per_epoch=STEPS, epochs=EPOCHS, verbose=1,
     validation_data=(x_valid, y_valid),
