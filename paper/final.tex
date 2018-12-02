@@ -105,13 +105,25 @@ To measure the effectiveness of our \textbf{Simplified AutoAugment} policies, we
 
 \subsection{Iceberg Dataset}
 
-After adding AutoAugment transfer augmentations to “Statoil/C-CORE Iceberg Classifier” Kaggle Dataset, we got 2942 examples (an increase over the original 1,674 images). All the images are 75x75 images with 2 Channels and 2 classes (iceberg/ship).
-
-Here is an example of each class 
+After adding AutoAugment transfer augmentations to “Statoil/C-CORE Iceberg Classifier” Kaggle Dataset, we got 2942 examples (an increase over the original 1,674 images). All the images are 75x75 images with 2 Channels and 2 classes (iceberg/ship).  These "images" are actually radar readings so are not in fact pictures,  but they can be visualized in 3D as follows:
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{iceberg_ship_example.png}
-\caption{Iceberg and Ship Examples from dataset.}
+\caption{Iceberg and Ship examples from dataset.}
+\end{figure}
+
+We can also visualize the augmented images in 3D as well.  The following example shows an augmented image based on a ShearY=8, Rotate=7 transformation.  (Ignore the color in this case) 
+
+\begin{figure}[bhp]
+\includegraphics[width=\columnwidth]{iceberg_aug_example.png}
+\caption{Visualizing Iceberg Augmentation.}
+\end{figure}
+
+The neural network only operates on 2D, however, so in reality the "images" and their augmentations would look like the following:
+
+\begin{figure}[bhp]
+\includegraphics[width=\columnwidth]{iceberg_aug_2D_example.png}
+\caption{Visualizing Iceberg Augmentation.}
 \end{figure}
 
 The model architecture came from a Kaggle Kernel called "My Best Single Model - Simple CNN" by Jirka Vrany.  It uses a CNN model that was one of the best single models in the above Iceberg competition. The architecture is comprised of 2 consecutive Convolution blocks with 3 Convolutional layers and 1 Max Pooling layer, followed by 2 Convolution blocks with 1 Convolution layer and 1 Max Pooling layer. It is followed by 3 Dense layers with dropouts. It uses Adam optimizer with no weight decay and learning rate 0.0001. Model was trained for 30 epochs on each fold, producing 10 models which were ensembled into a final model.  
@@ -123,7 +135,7 @@ The baseline model (with no augmentation) has log loss of 0.1446 on the competit
 \caption{Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset}
 \end{figure}
 
-First we observe on visualizing the Iceberg data, the images are low color variation because they are fairly artificial "images" that were generated from radar readings. Given this observation, the relatively small improvements from transferring CIFAR-10 policies makes sense because those policies include many color-related augmentations such as Color, Brightness, AutoContrast, etc, as shown in Table 8 of the AugtoAugment paper [1].  
+As we can see in Figure 3, iceberg "images" have low xolor variation as they generated from radar readings. Given this observation, the relatively small improvements from transferring CIFAR-10 policies makes sense because those policies include many color-related augmentations such as Color, Brightness, AutoContrast, etc, as shown in Table 8 of the AugtoAugment paper [1].  
 
 On the other hand, the improvements from using SVHN augmentations are almost twice as big, which makes sense because the SVHN augmentations contain relatively more positional transformations like ShearX, ShearY, Invert, Rotate, etc, as shown in Table 9 of the AutoAugment paper [1].  
 
