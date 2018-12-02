@@ -105,9 +105,16 @@ To measure the effectiveness of our \textbf{Simplified AutoAugment} policies, we
 
 \subsection{Iceberg Dataset}
 
-After adding AutoAugment transfer augmentations to “Statoil/C-CORE Iceberg Classifier” Kaggle Dataset, we got 2942 examples (an increase over the original 1,674 images). We used 10-fold cross-validation with the split into 2647 elements training and 295 elements in validation set. All the images are 75x75 images with 3 Channels and 2 classes (iceberg/not iceberg).
+After adding AutoAugment transfer augmentations to “Statoil/C-CORE Iceberg Classifier” Kaggle Dataset, we got 2942 examples (an increase over the original 1,674 images). All the images are 75x75 images with 2 Channels and 2 classes (iceberg/ship).
 
-The model architecture came from a Kaggle Kernel called "My Best Single Model - Simple CNN" by Jirka Vrany.  It uses a CNN model that was one of the best single models in the above Iceberg competition. The architecture is comprised of 2 consecutive Convolution blocks with 3 Convolutional layers and 1 Max Pooling layer, followed by 2 Convolution blocks with 1 Convolution layer and 1 Max Pooling layer. It is followed by 3 Dense layers with dropouts. It uses Adam optimizer with no weight decay and learning rate 0.0001. Model was trained for 30 epochs on each fold, producing 10 models which were ensembled into a final model.
+Here is an example of each class 
+
+\begin{figure}[bhp]
+\includegraphics[width=\columnwidth]{iceberg_ship_example.png}
+\caption{Iceberg and Ship Examples from dataset.}
+\end{figure}
+
+The model architecture came from a Kaggle Kernel called "My Best Single Model - Simple CNN" by Jirka Vrany.  It uses a CNN model that was one of the best single models in the above Iceberg competition. The architecture is comprised of 2 consecutive Convolution blocks with 3 Convolutional layers and 1 Max Pooling layer, followed by 2 Convolution blocks with 1 Convolution layer and 1 Max Pooling layer. It is followed by 3 Dense layers with dropouts. It uses Adam optimizer with no weight decay and learning rate 0.0001. Model was trained for 30 epochs on each fold, producing 10 models which were ensembled into a final model.  
 
 The baseline model (with no augmentation) has log loss of 0.1446 on the competition's public holdout set. We achieve an error rate of 0.1409 using CIFAR-10 augmentations and 0.1376 using SVHN augmentations, which are improvements of 2.6 percent and 5.1 percent respectively.
 
@@ -129,7 +136,7 @@ After adding AutoAugment transfer augmentations to “QuickDraw” Kaggle Datase
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{quickdraw_results.png}
-\caption{Results When Transfering Full and Partial SVHN Policies to Training on Iceberg Dataset}
+\caption{Results When Transfering Full and Partial SVHN Policies to Training on QuickDraw Dataset}
 \end{figure}
 
 \section{Results - Simplified AutoAugment}
@@ -154,7 +161,12 @@ The next steps for the final paper is to apply these top policies to the CIFAR-1
 
 
 
-\section{Results and Analysis}
+\section{Conclusion}
+
+Data augmentation generally improves model performance because it enables the model to gain access to training examples that are not present in the training data distribution. For example, in the QuickDraw dataset, most drawings of chairs are upright chairs, but we would also be interested in correctly predicting cases where the chair is drawn upside-down. The rotate transformation will introduce images of this sort to the learning algorithm by rotating chairs drawn upright. In doing so, we also teach the model certain invariances; in this case that an upside-down chair is the same as an upright chair.
+
+However, we’ve encountered cases where AutoAugment doesn’t improve model performance significantly or even makes it worse. Our observation is that this happens when the policies used are trained on datasets that are very different in nature. For example, the QuickDraw dataset contains only black and white images, while the SVHN dataset contains color images. So using the full SVHN augmentation that includes transformations like Contrast or Solarize make model performance worse than the baseline. 
+
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{quickdraw_compiled_transform_exmples.png}
