@@ -62,6 +62,8 @@ The original AutoAugment paper [1] has a github project that shows the applicati
 
 The rpmcruz/AutoAugment github repository [3], however, provides the most useful attempted implementation of the Reinforcement Learning approach in the original paper.  This repo leverages the Reinforcement Learning implementations details from two papers [1-2], and in doing so it at least provides a Controller and Child framework for policy searches, where the Controller suggests policies while the Child tests the effect of the policy on training the network.  This was useful to us as we can plug in experimental Controllers that perform a Random Search of policies, for example.
 
+Findings show that random search can provide competitive approach to reinforcement learning [4], however it was not compared with AutoAugment.
+
 \section{Datasets}
 
 We chose image datasets from Kaggle based on the following criteria:
@@ -122,7 +124,7 @@ We can also visualize the augmented images in 3D as well.  The following example
 The neural network only operates on 2D, however, so in reality the "images" and their augmentations would look like the following:
 
 \begin{figure}[bhp]
-\includegraphics[width=\columnwidth]{iceberg_aug_2D_example.png}
+\includegraphics[width=\columnwidth]{iceberg_aug_2d_example.png}
 \caption{Visualizing Iceberg Augmentation.}
 \end{figure}
 
@@ -145,11 +147,31 @@ On the other hand, the improvements from using SVHN augmentations are almost twi
 
 After adding AutoAugment transfer augmentations to “QuickDraw” Kaggle Dataset ...
 
+\begin{figure}[bhp]
+\includegraphics[width=\columnwidth]{quickdraw_compiled_transform_exmples.png}
+\caption{Examples of Quickdraw Transformations}
+\end{figure}
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{quickdraw_results.png}
 \caption{Results When Transfering Full and Partial SVHN Policies to Training on QuickDraw Dataset}
 \end{figure}
+
+\subsection{Summarized results}
+		\begin{table}[h]
+			\begin{tabular}{lll}
+				\hline
+				Policy &Iceberg &QuickDraw   \\ 
+				Metric &LogLoss &Precision   \\ \hline
+				Baseline  &0.145 &0.890\\
+				Baseline (15-epochs) &-  &0.830\\
+				CIFAR-10 Policies &0.141  &-\\ 
+				SVHN Policies	&0.138  &0.806\\
+				SVHN Reduced Policies	&0.126  &0.821\\	
+				\hline
+			\end{tabular}
+		\end{table}
+Table 1: Data Augmentation Transfer Learning Results: LogLoss for Iceberg and Precision for QuickDraw.
 
 \section{Results - Simplified AutoAugment}
 
@@ -160,14 +182,29 @@ An alternative strategy we explored for automatic data augmentation was a random
 
 The "Random Search Controller" was run for 250 epochs and kept track of the best policies it found for CIFAR-10. The policy that produced the best results was as follows:
 
-\begin{itemize}
-  \item Sub-Policy 0 = (Brightness, 0.1, 1.9), (ShearX, 0.0, -0.3)
-  \item Sub-Policy 1 = (Invert, 0.7, 0.111), (Contrast, 0.5, 1.5)
-  \item Sub-Policy 2 = (Invert, 0.3, 0.667), (Color, 0.5, 1.7)]
-  \item Sub-Policy 4 = (Rotate, 1.0, 0.778), (ShearY, 0.3, -0.45)
-  \item Sub-Policy 5 = (Brightness, 0.1, 1.5), (Invert, 0.9, 0.889)
- 
-\end{itemize}
+		\begin{table}[h]
+			\begin{tabular}{llll}
+				\hline
+				Policy &Operation &Probability&Magnitude   \\ \hline
+				Sub-Policy 0 &Brightness &0.1&1.9\\
+				&ShearX &0.0 &-0.3\\
+
+				Sub-Policy 1 &Invert &0.7&0.111\\
+				&Contrast &0.5 &1.5\\
+
+				Sub-Policy 2 &Invert &0.3&0.667\\
+				&Color &0.5 &1.7\\
+
+				Sub-Policy 3 &Rotate &1.0&0.778\\
+				&ShearY &0.3 &-0.45\\
+
+				Sub-Policy 4 &Brightness &0.1&1.5\\
+				&Invert &0.9 &0.889\\
+				\hline
+			\end{tabular}
+		\end{table}
+
+Table 2: Best policy produced by Random Search Controller.
 
 The next steps for the final paper is to apply these top policies to the CIFAR-10 dataset and compare the results to the original AutoAugment.
 
@@ -179,27 +216,37 @@ Data augmentation generally improves model performance because it enables the mo
 
 However, we’ve encountered cases where AutoAugment doesn’t improve model performance significantly or even makes it worse. Our observation is that this happens when the policies used are trained on datasets that are very different in nature. For example, the QuickDraw dataset contains only black and white images, while the SVHN dataset contains color images. So using the full SVHN augmentation that includes transformations like Contrast or Solarize make model performance worse than the baseline. 
 
+\section{Future directions}
+Adding augmentations slows down model training. It happens due to both increased number of images in the training dataset and the fact that transformations happen ‘on the fly’, i.e. the block that picks transformation for the image is a part of the model training code. It would have been possible to diminish this negative effect on the training time by introducing a data pre-processing step before actual model training. It requires additionally storing transformations that were applied to the specific image for the further results analysis.
 
-\begin{figure}[bhp]
-\includegraphics[width=\columnwidth]{quickdraw_compiled_transform_exmples.png}
-\caption{Examples of Quickdraw Transformations}
-\end{figure}
+In addition, random search policies trained on CIFAR-10 showed promising results when used with a deep learning model trained on CIFAR-10. This technique is much more practical than AutoAugment as it dispenses with the reinforcement learning. It would be interesting to conduct additional experimentation with this technique to figure out if it would make a good, low-cost alternative to AutoAugment. 
 
+Augmented Random Search (ARS) improves on naive random search by using finite difference equations to approximate the derivative and improve on the original guess. This would be an improvement over our implementation of random search as it would refine the first guess as opposed to starting from scratch every time. However, some effort would be needed to adapt the technique for our discrete policy space, as ARS was originally developed for continuous policy spaces.
 
-\section{Bitbucket Repository for This Paper}
+Successive halving [5] is another technique that could work well for auto-augmentation. This algorithm works by training a model for each possible policy and discarding the worst performing 50\% of the models every few epochs. This would enable us to conduct a search of the entire policy space in a manner that is computationally tractable.
 
-The code for our project can be found at \url{https://github.com/rounakmehta/autoaugment_performance}. The repo contains scripts with implementations of the transfer learning and random search for policies. We have also cloned the original repository that the authors shared with the paper [1] in order to compare results. Because of the large size of the datasets, those were not included in the repo and need to be downloaded after cloning it. Instructions on the data download and details on how the repository structure can be found in the Readme.  
+\section{Github Repository}
+
+The code for this project can be found at \url{https://github.com/rounakmehta/autoaugment_performance}. The repo contains scripts with implementations of the transfer learning and random search for policies. We have also cloned the original repository that the authors shared with the paper [1] in order to compare results. Because of the large size of the datasets, those were not included in the repo and need to be downloaded after cloning it. Instructions on the data download and details on how the repository structure can be found in the Readme.  
 
 %-------------------------------------------------------------------------
 \section{References}
 
-[1]  E. D. Cubuk, B. Zoph, D. Mane, V. Vasudevan, and Q. V. Le. Autoaugment:   Learning  augmentation  policies  from  data, 2018. \newline
-[2] B. Zoph, V. Vasudevan, J. Shlens, Q. V. Le. Learning Transferable Architectures for Scalable Image Recognition, 2017. \newline
-[3] Ricardo Cruz, AutoAugment implementation, GitHub repository, https://github.com/rpmcruz/autoaugment, 2018 \newline
-
 {\small
 \bibliographystyle{ieee}
 \bibliography{egbib}
+
+[1] E. D. Cubuk, B. Zoph, D. Mane, V. Vasudevan, and Q. V. Le. Autoaugment:   Learning  augmentation  policies  from  data, 2018. \newline
+
+[2] B. Zoph, V. Vasudevan, J. Shlens, Q. V. Le. Learning Transferable Architectures for Scalable Image Recognition, 2017. \newline
+
+[3] Ricardo Cruz, AutoAugment implementation, GitHub repository, https://github.com/rpmcruz/autoaugment, 2018. \newline
+
+[4] H. Mania, A. Guy, and B. Recht. Simple random search provides a competitive approach to reinforcement learning, 2018.\newline
+
+[5] M. Kumar, G. E. Dahl, V. Vasudevan, and M. Norouzi. Parallel Architecture and Hyperparameter Search
+via Successive Halving and Classification, 2018.\newline
+
 }
 
 \end{document}
