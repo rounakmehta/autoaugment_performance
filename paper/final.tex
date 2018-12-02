@@ -71,16 +71,16 @@ We chose image datasets from Kaggle based on the following criteria:
 \begin{itemize}
   \item Image dataset is labeled, i.e. classification is the goal
   \item Image dataset is of a manageable size (less than 10GB)
-  \item A Kaggle Kernel is available (ensures repeatability)
-  \item Kernel is a single model that can be run relatively quickly (under 1 hour).  (Note this excludes many competition-winning models which are large ensembles and take days to run).
+  \item Existence of a Kaggle Kernel which provides a classifier baseline for the dataset.  A Kaggle Kernel is a replayable script that runs in a controlled environment on the Kaggle platform.  This ensures easy reproducibility of the baseline, since both the code and runtime environment for the model training and evaluation is provided.
+  \item Kernel is a single model that can be run relatively quickly (under 12 hours).  Note this excludes many competition-winning models which are large ensembles and take days to run.
 \end{itemize}
 
 The datasets that met these criteria include:
 
 \begin{itemize}
-  \item \textbf{Iceberg Dataset}.  This is an image dataset from the Kaggle “Statoil/C-CORE Iceberg Classifier” Challenge.  It contains 1,674 "images" of icebergs and ships that come from radar readings.  
-  \item \textbf{QuickDraw Dataset}.  TODO: Add Description
-  \item \textbf{CIFAR-10 Dataset}.  This is the same dataset used by the authors [1].  We use this for comparing the Simplified AutoAugment performance to that of the Reinforcement Learning AutoAugment.  Although this dataset is not a Kaggle dataset, it is labeled, relatively small, and has many classifier baselines as specified in the AutoAugment paper [1].        
+  \item \textbf{Iceberg Dataset}.  This is an image dataset from the Kaggle “Statoil/C-CORE Iceberg Classifier Challenge".  It contains 1,674 "images" of icebergs and ships that come from radar readings.  
+  \item \textbf{QuickDraw Dataset}.  This is an image dataset from the Kaggle “Quick, Draw! Doodle Recognition Challenge".  It contains iver 27 million "images" of doodles (quick drawings) which belong to 340 categories.  
+  \item \textbf{CIFAR-10 Dataset}.  This is the same canonical dataset used by the authors [1].  We use this for comparing the Simplified AutoAugment performance to that of the Reinforcement Learning AutoAugment.  Although this dataset is not a Kaggle dataset, it is labeled, relatively small, and has many classifier baselines as specified in the AutoAugment paper [1].        
 \end{itemize}
 
 
@@ -114,30 +114,34 @@ After adding AutoAugment transfer augmentations to “Statoil/C-CORE Iceberg Cla
 \caption{Iceberg and Ship examples from dataset.}
 \end{figure}
 
-We can also visualize the augmented images in 3D as well.  The following example shows an augmented image based on a ShearY=8, Rotate=7 transformation.  (Ignore the color in this case) 
+We can also visualize the augmented images in 3D as well.  The following example shows an augmented image based on a ShearY+Rotate transformation.  This means that the image was sheared along the vertical axis, and in addition it was rotated.  The shear is a little hard to see but the rotation is clear.
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{iceberg_aug_example.png}
-\caption{Visualizing Iceberg Augmentation.}
+\caption{Visualizing Iceberg Augmentation in 3D.}
 \end{figure}
 
-The neural network only operates on 2D, however, so in reality the "images" and their augmentations would look like the following:
+The neural network only operates on 2D, however, so statying with the example above, the classifier would operate on images that look like the following.
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{iceberg_aug_2d_example.png}
-\caption{Visualizing Iceberg Augmentation.}
+\caption{Visualizing Iceberg Augmentation in 2D.  The original image is on the left and the augmented Shear+Rotate image is on the right.}
 \end{figure}
 
 The model architecture came from a Kaggle Kernel called "My Best Single Model - Simple CNN" by Jirka Vrany.  It uses a CNN model that was one of the best single models in the above Iceberg competition. The architecture is comprised of 2 consecutive Convolution blocks with 3 Convolutional layers and 1 Max Pooling layer, followed by 2 Convolution blocks with 1 Convolution layer and 1 Max Pooling layer. It is followed by 3 Dense layers with dropouts. It uses Adam optimizer with no weight decay and learning rate 0.0001. Model was trained for 30 epochs on each fold, producing 10 models which were ensembled into a final model.  
 
-The baseline model (with no augmentation) has log loss of 0.1446 on the competition's public holdout set. We achieve an error rate of 0.1409 using CIFAR-10 augmentations and 0.1376 using SVHN augmentations, which are improvements of 2.6 percent and 5.1 percent respectively.
+We again note that there were certainly better-performing baseline classifiers in the Kaggle Iceberg competition, but for this paper we preferred simple, single models that can run in a reasonable amount of time. 
+
+The baseline model described above (trained with no augmentation) scored log loss of 0.1446 on the competition's public holdout set.  Using the exact augmentation policies from the original paper [1], we achieve an error rate of 0.141 using CIFAR-10 augemntations  and 0.138 using SVHN augmentations.  These are significant improvements of 2.6 percent and 5.1 percent respectively.
+
+We were also curious about whether the 
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{iceberg_results.png}
 \caption{Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset}
 \end{figure}
 
-As we can see in Figure 3, iceberg "images" have low xolor variation as they generated from radar readings. Given this observation, the relatively small improvements from transferring CIFAR-10 policies makes sense because those policies include many color-related augmentations such as Color, Brightness, AutoContrast, etc, as shown in Table 8 of the AugtoAugment paper [1].  
+As we can see in Figure 3, iceberg "images" have low color variation as they generated from radar readings. Given this observation, the relatively small improvements from transferring CIFAR-10 policies makes sense because those policies include many color-related augmentations such as Color, Brightness, AutoContrast, etc, as shown in Table 8 of the AugtoAugment paper [1].  
 
 On the other hand, the improvements from using SVHN augmentations are almost twice as big, which makes sense because the SVHN augmentations contain relatively more positional transformations like ShearX, ShearY, Invert, Rotate, etc, as shown in Table 9 of the AutoAugment paper [1].  
 
