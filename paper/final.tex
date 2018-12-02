@@ -79,7 +79,7 @@ The datasets that met these criteria include:
 
 \begin{itemize}
   \item \textbf{Iceberg Dataset}.  This is an image dataset from the Kaggle “Statoil/C-CORE Iceberg Classifier Challenge".  It contains 1,674 "images" of icebergs and ships that come from radar readings.  
-  \item \textbf{QuickDraw Dataset}.  This is an image dataset from the Kaggle “Quick, Draw! Doodle Recognition Challenge".  It contains iver 27 million "images" of doodles (quick drawings) which belong to 340 categories.  
+  \item \textbf{QuickDraw Dataset}.  This is an image dataset from the Kaggle “Quick, Draw! Doodle Recognition Challenge".  It contains iver 27 million images of doodles (quick drawings) which belong to 340 categories.  
   \item \textbf{CIFAR-10 Dataset}.  This is the same canonical dataset used by the authors [1].  We use this for comparing the Simplified AutoAugment performance to that of the Reinforcement Learning AutoAugment.  Although this dataset is not a Kaggle dataset, it is labeled, relatively small, and has many classifier baselines as specified in the AutoAugment paper [1].        
 \end{itemize}
 
@@ -88,19 +88,27 @@ The datasets that met these criteria include:
 
 \subsection{Transfer Learning}
 
-To measure \textbf{Transfer Learning} on augmentation policies, we will evaluate the following on the Iceberg and Human Protein datasets:
+To measure \textbf{Transfer Learning} on augmentation policies, we will evaluate the following on the Iceberg and QuickDraw datasets:
 
 \begin{itemize}
   \item Performance of the classifier baseline (Kaggle Kernel) without any data augmentation.  This will require removing and data augmentation added by the Kernel author, if any.  We will describe the baselines in more detail in the Results sections.
   \item Performance of the classifier with data augmentation policies discovered by AutoAugment for CIFAR-10 and SVHN.  We are hoping for a clear improvement over the baseline above.
+  \item Performance of the classifier with data augmentation policies using a subset of the AutoAugment policies SVHN.  We would like to know whether performance improvements over using full augmentation polciies is possible. 
 \end{itemize}
 
-The definition of "Performance" will depend on the dataset.  For Iceberg, the performance measure will be Binary Log Loss.  For Human Protein, the performance measure will be Macro F1 Score.
+The definition of "Performance" will depend on the dataset.  For Iceberg, the performance measure will be Binary Log Loss.  For Quick Draw, the performance measure will be Mean Precision @3 (mean precision for top 3 classes).
 
 \subsection{Simplified AutoAugment}
 
-To measure the effectiveness of our \textbf{Simplified AutoAugment} policies, we will compare the accuracy of Wide-ResNet-28-10 using AutoAugment [1] policies on CIFAR-10.  This accuracy was reported as 2.68 percent in the original paper.  If Simplified AutoAugment provides a competitive result 2.68 percent, we will use Simplified AutoAugment to search for the policies on Iceberg and Human Protein datasets as well.
+To measure the effectiveness of our \textbf{Simplified AutoAugment} policies, we will compare to accuracy of Wide-ResNet-28-10 using AutoAugment [1] policies on CIFAR-10.  Specifically we will compare:
 
+\begin{itemize}
+  \item Reported accuracy of the classifier baseline (Wide-ResNet-28-10) without any data augmentation, as reported in the AutoAugment paper [1].  This was reported as 3.87 percent error.
+  \item Our own measured performance of the CIFAR-10 Wide-ResNet-28-10 baseline with data augmentation policies discovered for the dataset by AutoAugment using Recinforcement Learning.  We will seek to reproduce the reported percent error of 2.68 from the AutoAugment paper [1].
+  \item Our measured performance of the  CIFAR-10 Wide-ResNet-28-10 baseline with data augmentation policies discovered for the dataset by our Simplified AutoAugment which uses Random Search instead of Reinforcement Learning.  
+\end{itemize}
+
+We would expect the performance of Simplified AutoAugment to fall somewhere between 3.87 and 2.68 percent, but our experiment will reveal where in spectrum it falls.
 
 
 \section{Results - Transfer Learning}
