@@ -70,7 +70,7 @@ We chose image datasets from Kaggle based on the following criteria:
 
 \begin{itemize}
   \item Image dataset is labeled, i.e. classification is the goal
-  \item Image dataset is of a manageable size (less than 10GB)
+  \item Image dataset is of a manageable size (less than 20GB)
   \item Existence of a Kaggle Kernel which provides a classifier baseline for the dataset.  A Kaggle Kernel is a replayable script that runs in a controlled environment on the Kaggle platform.  This ensures easy reproducibility of the baseline, since both the code and runtime environment for the model training and evaluation is provided.
   \item Kernel is a single model that can be run relatively quickly (under 12 hours).  Note this excludes many competition-winning models which are large ensembles and take days to run.
 \end{itemize}
@@ -129,68 +129,70 @@ We can also visualize the augmented images in 3D as well.  The following example
 \caption{Visualizing Iceberg Augmentation in 3D.  The original image is on the left and the augmented Shear+Rotate image is on the right.}
 \end{figure}
 
-The neural network only operates on 2D, however, so statying with the example above, the classifier would operate on images that look like the following.
+The neural network only operates on 2D images, however.  Below is an example of the representation that the neural network would actually work with.
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{iceberg_aug_2d_example.png}
 \caption{Visualizing Iceberg Augmentation in 2D.  The original image is on the left and the augmented Shear+Rotate image is on the right.}
 \end{figure}
 
-The model architecture came from a Kaggle Kernel called "My Best Single Model - Simple CNN" by Jirka Vrany.  It uses a CNN model that was one of the best single models in the above Iceberg competition. The architecture is comprised of 2 consecutive Convolution blocks with 3 Convolutional layers and 1 Max Pooling layer, followed by 2 Convolution blocks with 1 Convolution layer and 1 Max Pooling layer. It is followed by 3 Dense layers with dropouts. It uses Adam optimizer with no weight decay and learning rate 0.0001. Model was trained for 30 epochs on each fold, producing 10 models which were ensembled into a final model.  
+Moving onto network architecture, the model came from a Kaggle Kernel called "My Best Single Model - Simple CNN" by Jirka Vrany [6].  It uses a CNN model that was one of the best single models in the above Iceberg competition. The architecture is comprised of 2 consecutive Convolution blocks with 3 Convolutional layers and 1 Max Pooling layer, followed by 2 Convolution blocks with 1 Convolution layer and 1 Max Pooling layer. It is followed by 3 Dense layers with dropouts. It uses Adam optimizer with no weight decay and learning rate 0.0001. Model was trained for 30 epochs on each fold, producing 10 models which were ensembled into a final model.  
 
 We again note that there were certainly better-performing baseline classifiers in the Kaggle Iceberg competition, but for this paper we preferred simple, single models that can run in a reasonable amount of time. 
 
-The baseline model described above (trained with no augmentation) scored log loss of 0.1446 on the competition's public holdout set.  Using the exact augmentation policies from the original paper [1], we achieve an error rate of 0.141 using CIFAR-10 augemntations  and 0.138 using SVHN augmentations.  These are significant improvements of 2.6 percent and 5.1 percent respectively.
+The baseline model described above (trained with no augmentation) scored log loss of 0.1446 on the competition's public holdout set. (This was actually better than the reported 0.1541 log loss on the public competition holdout set, and this was due to our removing the author's hand-selected augmentations).  Using the exact augmentation policies from the original paper [1], we achieve an log loss of 0.1409 using CIFAR-10 augemntations and 0.1376 using SVHN augmentations.  These are significant improvements of 2.6 percent and 5.1 percent respectively.  The results are shown below.
 
-We were also curious about whether the 
+
+    \begin{table}[h]
+      \begin{tabular}{lll}
+        \hline
+        Experiment &Log Loss & Improvement   \\ \hline
+        Baseline CNN (No Aug.)  &0.1446 &-\\
+        CIFAR-10 Policies &0.1402  & 2.6\%\\ 
+        SVHN Policies &0.1376  & 5.1\%\\
+        SVHN Non-Color Policies &0.1256  &15.1\%\\  
+        \hline
+      \end{tabular}
+    \end{table}
+
+Table 1: Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset.
+
+To understand the results above, we need to consider the nature of the Iceberg radar/image data.  The original data consists of two 75x75 matrixes with positional radar readings.  These readings are artifically transformed into 2D "images" by transforming them to a color scale between 0 and 255 and adding a 3rd channel which is just the average of the other 2.  So inutitively speaking, the height of the iceberg or ship in the randar data gets mapped to a color in the image, so the 2D image is sort of a bird's eye view of the iceberg or ship.
+
+What then happens with any augmentation that operates on color, such as Solarize, Invert, Color, etc as shown in Table 7 of the AugtoAugment paper [1]?  These augmentations have the effect of changing the "height" of the iceberg or ship reading.  In the worst case, as is the case with Solarize, this results in data which will never be observed in the real world.  Consider for example what a Solarize transformation does to the original data, as shown in 3D below.
+
 
 \begin{figure}[bhp]
-\includegraphics[width=\columnwidth]{iceberg_results.png}
-\caption{Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset}
+\includegraphics[width=\columnwidth]{iceberg_solarize.png}
+\caption{Solarize transformation on 3D representation of iceberg.  It's easier to see here that the iceberg gets flipped and that this augmentation is not useful.}
 \end{figure}
 
-As we can see in Figure 3, iceberg "images" have low color variation as they generated from radar readings. Given this observation, the relatively small improvements from transferring CIFAR-10 policies makes sense because those policies include many color-related augmentations such as Color, Brightness, AutoContrast, etc, as shown in Table 8 of the AugtoAugment paper [1].  
+Clearly, this augmentation will not help the neural network learn, as the augmentation creates as iceberg is upside-down relative to all the icebergs in the test data set (and in the real world). 
 
-On the other hand, the improvements from using SVHN augmentations are almost twice as big, which makes sense because the SVHN augmentations contain relatively more positional transformations like ShearX, ShearY, Invert, Rotate, etc, as shown in Table 9 of the AutoAugment paper [1].  
+Given this observation, the relatively small improvements from transferring CIFAR-10 policies makes sense because those policies include many color-related augmentations such as Color, Solarize, Brightness, AutoContrast, etc, as shown in Table 7 of the AutoAugment paper [1].  On the other hand, the improvements from using SVHN augmentations are almost twice as big, which makes sense because the SVHN augmentations contain relatively more positional transformations like ShearX, ShearY, Rotate, TranslateX, TranslateY, etc.
 
+The largest improvement, however, comes when we reduce the SVHN policies by removing policies that involve Solarize, AutoContrast, and Contrast (many of those related to transforming color).  This results in a 15.1\% improvement in the baseline as shown in Table 1.  The significance of this experiment is that it shows that augmentation policies are not nessarily optimal when transferred, and that simple heuristical modifications like supressing color-related augmentations in the transferred policies can produce a significant improvement.
 
 
 \subsection{QuickDraw Dataset}
 
-After adding AutoAugment transfer augmentations to “QuickDraw” Kaggle Dataset ...
+The QuickDraw is dataset is a much larger dataset than the Iceberg dataset, consisting of over 27 million images from human drawings or doodles classified into 340 classes.  Each image is 64x64 with 3 color channels.  
+
+
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{quickdraw_compiled_transform_exmples.png}
 \caption{Examples of Quickdraw Transformations}
 \end{figure}
 
-\begin{figure}[bhp]
-\includegraphics[width=\columnwidth]{quickdraw_results.png}
-\caption{Results When Transfering Full and Partial SVHN Policies to Training on QuickDraw Dataset}
-\end{figure}
 
-\subsection{Summarized results}
-		\begin{table}[h]
-			\begin{tabular}{lll}
-				\hline
-				Policy &Iceberg &QuickDraw   \\ 
-				Metric &LogLoss &Precision   \\ \hline
-				Baseline  &0.145 &0.890\\
-				Baseline (15-epochs) &-  &0.830\\
-				CIFAR-10 Policies &0.141  &-\\ 
-				SVHN Policies	&0.138  &0.806\\
-				SVHN Reduced Policies	&0.126  &0.821\\	
-				\hline
-			\end{tabular}
-		\end{table}
-Table 1: Data Augmentation Transfer Learning Results: LogLoss for Iceberg and Precision for QuickDraw.
 
 \section{Results - Simplified AutoAugment}
 
 
 In our original proposal, we had planned to apply the AutoAugment [1] using the same Reinforcement Learning approach for finding the best policies that was suggested in the paper.  That proved to be difficult due to insufficient details in the paper, such as the number of epochs used in the Controller.  It would also require extensive computational resources to reproduce the exact results in the paper.
 
-An alternative strategy we explored for automatic data augmentation was a random search over the set of all possible policies. We call this the "Simplified AutoAugment".  This strategy was inspired by random grid search for hyperparameter tuning, and it is much simpler than LSTM Controller. The constructed search space consists of the 16 policies, 10 and 11 discrete values for probability and magnitude respectively. On each epoch, a random policy is generated by uniformly sampling from each of these three random variables. A neural network is then trained on the CIFAR-10 dataset (reduced to 4000 random samples) using the chosen policy for auto-augmentation. The validation accuracy of the network is cached along with the chosen policy. The child network consists of 2 convolutional layers, a max pooling layer and a dropout layer, followed by a single dense layer and another dropout layer. The policy that produced the best accuracy is recovered after all epochs are complete.
+An alternative strategy we explored for automatic data augmentation was a random search over the set of all possible policies. We call this the "Simplified AutoAugment".  This strategy was inspired by random grid search for hyperparameter tuning, and it is much simpler than Reinforcement Learning LSTM Controller in the original paper [1]. The constructed search space consists of the 16 policies, 10 and 11 discrete values for probability and magnitude respectively. On each epoch, a random policy is generated by uniformly sampling from each of these three random variables. A neural network is then trained on the CIFAR-10 dataset (reduced to 4000 random samples) using the chosen policy for auto-augmentation. The validation accuracy of the network is cached along with the chosen policy. The child network consists of 2 convolutional layers, a max pooling layer and a dropout layer, followed by a single dense layer and another dropout layer. The policy that produced the best accuracy is recovered after all epochs are complete.
 
 The "Random Search Controller" was run for 250 epochs and kept track of the best policies it found for CIFAR-10. The policy that produced the best results was as follows:
 
@@ -218,7 +220,6 @@ The "Random Search Controller" was run for 250 epochs and kept track of the best
 
 Table 2: Best policy produced by Random Search Controller.
 
-The next steps for the final paper is to apply these top policies to the CIFAR-10 dataset and compare the results to the original AutoAugment.
 
 
 
@@ -258,6 +259,9 @@ The code for this project can be found at \url{https://github.com/rounakmehta/au
 
 [5] M. Kumar, G. E. Dahl, V. Vasudevan, and M. Norouzi. Parallel Architecture and Hyperparameter Search
 via Successive Halving and Classification, 2018.\newline
+
+[6] Vrany, Jirka. My best single model - simple CNN - LB 0.1541. https://www.kaggle.com/jirivrany/my-best-single-model-simple-cnn-lb-0-1541, 2018.\newline
+
 
 }
 
