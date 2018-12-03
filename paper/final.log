@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  3 DEC 2018 11:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  3 DEC 2018 12:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -457,75 +457,78 @@ Package pdftex.def Info: random_search_arch.png  used on input line 215.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [5 <./random_search_arch.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 293--294
+Underfull \hbox (badness 10000) in paragraph at lines 294--295
 \OT1/pcr/m/n/10 / / github . com / rounakmehta / autoaugment _
  []
 
 No file final.bbl.
 
-Underfull \hbox (badness 10000) in paragraph at lines 302--303
+Underfull \hbox (badness 10000) in paragraph at lines 303--304
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 304--305
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6]
+Underfull \hbox (badness 10000) in paragraph at lines 305--306
 
  []
 
 
-Underfull \hbox (badness 1400) in paragraph at lines 306--307
+Underfull \hbox (badness 1400) in paragraph at lines 307--308
 []\OT1/ptm/m/n/9 [3] Ri-cardo Cruz, Au-toAug-ment im-ple-men-ta-tion, GitHub
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 306--307
+Underfull \hbox (badness 10000) in paragraph at lines 307--308
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--309
+Underfull \hbox (badness 10000) in paragraph at lines 309--310
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 310--312
-
- []
-
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 313--314
+Underfull \hbox (badness 10000) in paragraph at lines 311--313
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 315--317
+Underfull \hbox (badness 10000) in paragraph at lines 314--315
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 318--319
+Underfull \hbox (badness 10000) in paragraph at lines 316--318
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 319--320
 []\OT1/ptm/m/n/9 [8] Bel-uga. Greyscale Mo-bileNet [LB=0.892].
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 318--319
+Underfull \hbox (badness 10000) in paragraph at lines 319--320
 \OT1/ptm/m/n/9 https://www.kaggle.com/gaborfodor/greyscale-mobilenet-lb-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 318--319
+Underfull \hbox (badness 10000) in paragraph at lines 319--320
 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 322.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 323.
 [7
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 322.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 323.
  (./final.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 322.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 322.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 322.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 323.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 323.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 323.
  ) 
 Here is how much of TeX's memory you used:
  6492 strings out of 492649
@@ -534,7 +537,7 @@ Here is how much of TeX's memory you used:
  10245 multiletter control sequences out of 15000+600000
  25614 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,9n,27p,1447b,370s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 32i,9n,27p,1447b,368s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
 xlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texl
@@ -542,7 +545,7 @@ ive/2018/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2018
 /texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf-dis
 t/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
 pe1/urw/times/utmri8a.pfb>
-Output written on final.pdf (7 pages, 2351453 bytes).
+Output written on final.pdf (7 pages, 2351896 bytes).
 PDF statistics:
  102 PDF objects out of 1000 (max. 8388607)
  76 compressed objects within 1 object stream
