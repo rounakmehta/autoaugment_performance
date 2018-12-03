@@ -96,7 +96,7 @@ To measure \textbf{Transfer Learning} on augmentation policies, we will evaluate
   \item Performance of the classifier with data augmentation policies using a subset of the AutoAugment policies SVHN.  We would like to know whether performance improvements over using full augmentation polciies is possible. 
 \end{itemize}
 
-The definition of "Performance" will depend on the dataset.  For Iceberg, the performance measure will be Binary Log Loss.  For Quick Draw, the performance measure will be Mean Precision @3 (mean precision for top 3 classes).
+The definition of "Performance" will depend on the dataset.  For Iceberg, the performance measure will be Binary Log Loss.  The performance metric for the QuickDraw competition (and our chosen MobileNet baseline) is Mean Average Precision @3 (MAP@3), a custom metric defined for the compeition described here https://bit.ly/2Q0jqH7. 
 
 \subsection{Simplified AutoAugment}
 
@@ -148,14 +148,14 @@ The baseline model described above (trained with no augmentation) scored log los
         \hline
         Experiment &Log Loss & Improvement   \\ \hline
         Baseline CNN (No Aug.)  &0.1446 &-\\
-        CIFAR-10 Policies &0.1402  & 2.6\%\\ 
-        SVHN Policies &0.1376  & 5.1\%\\
-        SVHN Non-Color Policies &0.1256  &15.1\%\\  
+        w/CIFAR-10 Policies &0.1402  & 2.6\%\\ 
+        w/SVHN Policies (Full) &0.1376  & 5.1\%\\
+        w/SVHN Non-Color Policies &0.1256  &15.1\%\\  
         \hline
       \end{tabular}
     \end{table}
 
-Table 1: Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset.
+Table 1: Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset.  The Log Loss reported is on the competition public holdout set.
 
 To understand the results above, we need to consider the nature of the Iceberg radar/image data.  The original data consists of two 75x75 matrixes with positional radar readings.  These readings are artifically transformed into 2D "images" by transforming them to a color scale between 0 and 255 and adding a 3rd channel which is just the average of the other 2.  So inutitively speaking, the height of the iceberg or ship in the randar data gets mapped to a color in the image, so the 2D image is sort of a bird's eye view of the iceberg or ship.
 
@@ -164,7 +164,7 @@ What then happens with any augmentation that operates on color, such as Solarize
 
 \begin{figure}[bhp]
 \includegraphics[width=\columnwidth]{iceberg_solarize.png}
-\caption{Solarize transformation on 3D representation of iceberg.  It's easier to see here that the iceberg gets flipped and that this augmentation is not useful.}
+\caption{Visualizing the Solarize transformation on an iceberg. This produces a non-helpful augmentation.}
 \end{figure}
 
 Clearly, this augmentation will not help the neural network learn, as the augmentation creates as iceberg is upside-down relative to all the icebergs in the test data set (and in the real world). 
@@ -178,23 +178,53 @@ The largest improvement, however, comes when we reduce the SVHN policies by remo
 
 The QuickDraw is dataset is a much larger dataset than the Iceberg dataset, consisting of over 27 million images from human drawings or doodles classified into 340 classes.  Each image is 64x64 with 3 color channels.  
 
+The baseline classifier is one based on MobileNets [7] and was created by Kaggle user Beluga [8].  The most significant aspect of the model is that it uses a preprocessor that converts the original color doodles into greyscale images before feeding those images into a MobileNet.  (This will have an impact on the effectiveness of color augmentation policies)  The Keras implementation of MobileNets is used with a learning rate of 0.002.
 
 
-\begin{figure}[bhp]
-\includegraphics[width=\columnwidth]{quickdraw_compiled_transform_exmples.png}
-\caption{Examples of Quickdraw Transformations}
-\end{figure}
+    \begin{table}[h]
+      \begin{tabular}{lll}
+        \hline
+        Experiment &MAP@3    \\ \hline
+        Baseline MobileNet (No Aug.) - 48 Epochs  &0.890 \\
+        Baseline MobileNet (No Aug.) - 15 Epochs  &0.830 \\        
+        w/CIFAR-10 Policies &0.785  \\ 
+        w/SVHN Policies (Full) &0.806  \\
+        w/SVHN Non-Color Policies &0.821  \\  
+        \hline
+      \end{tabular}
+    \end{table}
+
+Table 2: Results When Transfering CIFAR-10 and SVHN Policies to Training on QuickDraw Dataset.  The Meann Average Precision (MAP@3) is measured on the competition public holdout set.
+
+First a bit about the experiments shown in Table 2.  The Kaggle Kernel based on MobileNets is capable of scoring 0.890 on the competition public leaderboard, and we confirmed this through our own replay of the kernel which took about 8 hours.  Due to the cost of calculating data augmentations during training, however, we found that we needed to reduce the number of epochs used the MobileNet to just 15 epochs so that the experiments with augmentations could run in about 8 hours.  This baseline with 15 epochs scored 0.830, so we decided to use it as our actual baseline.
+
+We spent considerable time trying to understand the results of these experiments shown in Table 2.  On one hand, given the images are transformed to greyscale, the scores for the augmentation experiments relative to each other makes sense.  Specifically, we would expect the CIFAR-10 policies to do the relative worst because it contains many augmentations are color related.  SVHN should be better because it contains more positional transformations, and it does.  Finally, the subset SVHN policies that exclude Contrast, AutoContrast, and Solarize ("Non-Color Policies") should do the relative best.
+
+One the other hand, the scores relative to the 15 epoch baseline did not make sense initially, since we do not expect the augmentations to actually hurt baseline performance.  We offer a two hypotheses next.  
+
+First, it is possible that when we reduced the number of epochs used in the baseline to 15, this put the experiments which used augmentations at a disadvantage. There is a probabilistic nature to the application of policies in AutoAugment, so perhaps with more epochs the experiments with augmentations could overtake the baseline (assuming they run with the same number of epochs).
+
+Next, it is likely that gains from transfer learning from data augmentations are simply not guaranteed for any dataset.  That is, the effectiveness of augmentation transfer learning is probably very dataset/algorithm/performance-metric specific.  We certainly saw in the Iceberg analysis how the Solarize transformation destroys signal as in Figure 4.  The CIFAR-10 and SVHN policies may be similarly non-optimal for the greyscale, whitespace-dominant nature of the QuickDraw images.
 
 
+%\vfill\null 
 
 \section{Results - Simplified AutoAugment}
 
+\begin{figure}[bhp]
+\includegraphics[width=\columnwidth]{random_search_arch.png}
+\caption{Overview of policy search using a random search controller architecture.}
+\end{figure}
 
 In our original proposal, we had planned to apply the AutoAugment [1] using the same Reinforcement Learning approach for finding the best policies that was suggested in the paper.  That proved to be difficult due to insufficient details in the paper, such as the number of epochs used in the Controller.  It would also require extensive computational resources to reproduce the exact results in the paper.
 
-An alternative strategy we explored for automatic data augmentation was a random search over the set of all possible policies. We call this the "Simplified AutoAugment".  This strategy was inspired by random grid search for hyperparameter tuning, and it is much simpler than Reinforcement Learning LSTM Controller in the original paper [1]. The constructed search space consists of the 16 policies, 10 and 11 discrete values for probability and magnitude respectively. On each epoch, a random policy is generated by uniformly sampling from each of these three random variables. A neural network is then trained on the CIFAR-10 dataset (reduced to 4000 random samples) using the chosen policy for auto-augmentation. The validation accuracy of the network is cached along with the chosen policy. The child network consists of 2 convolutional layers, a max pooling layer and a dropout layer, followed by a single dense layer and another dropout layer. The policy that produced the best accuracy is recovered after all epochs are complete.
+An alternative strategy, shown in Figure 5, is to find good policies using a random search over the set of all possible policies. We call this the "Simplified AutoAugment".  This strategy was inspired by random grid search for hyperparameter tuning, and it is much simpler than Reinforcement Learning LSTM Controller described in the original paper [1]. 
 
-The "Random Search Controller" was run for 250 epochs and kept track of the best policies it found for CIFAR-10. The policy that produced the best results was as follows:
+The constructed search space consists of the 16 policies, 10 and 11 discrete values for probability and magnitude respectively.  On each epoch, a random policy is generated by uniformly sampling from each of these three random variables, so there is an equal probability p of each combination. A neural network is then trained on the CIFAR-10 dataset (reduced to 4000 random samples) using the chosen policy for auto-augmentation. The validation accuracy R of the network is stored along with the chosen policy. The child network consists of 2 convolutional layers, a max pooling layer and a dropout layer, followed by a single dense layer and another dropout layer. The policy that produced the best accuracy is recovered after all epochs are complete.
+
+The "Random Search Controller" was run for 250 epochs and kept track of the best policies it found for CIFAR-10. The controller/child framework provided by the Ricardo Cruz autoaugment github project [3] was particularly helpful in making the Random Search Controller feasible to implement.
+
+The policy that produced the best results was as follows:
 
 		\begin{table}[h]
 			\begin{tabular}{llll}
@@ -220,14 +250,34 @@ The "Random Search Controller" was run for 250 epochs and kept track of the best
 
 Table 2: Best policy produced by Random Search Controller.
 
+Now that we found a good (but probably not optimal) set of policies using Simplified AutoAugment, we put the 5 best policies we found to the test by using them for training the CIFAR-10 Wide-ResNet-28-10 classifier baseline.  The results are shown in Table 3.
 
+\vfill\null 
 
+    \begin{table}[h]
+      \begin{tabular}{lll}
+        \hline
+        Experiment &Error Rate  \\ \hline
+        CIFAR-10 Wide-ResNet-28-10  &3.87\\
+        AutoAugment Paper [1]  &2.68\% \\ 
+        Simplified AutoAugment &03.40  \%\\
+        \hline
+      \end{tabular}
+    \end{table}
+
+Table 3: Performance of Simplified AutoAugment policies on CIFAR-10 Wide-ResNet-28-10.
+
+The results in Table 3 are very promising for a random search approach to AutoAugment.  It shows that while the random search controller in Simplified AutoAugment does not find policiesas optimal as the reinforcement learning approach in AutoAugment (2.68\%), it can still beat the baseline with no augmentation (3.87\%).   
 
 \section{Conclusion}
 
-Data augmentation generally improves model performance because it enables the model to gain access to training examples that are not present in the training data distribution. For example, in the QuickDraw dataset, most drawings of chairs are upright chairs, but we would also be interested in correctly predicting cases where the chair is drawn upside-down. The rotate transformation will introduce images of this sort to the learning algorithm by rotating chairs drawn upright. In doing so, we also teach the model certain invariances; in this case that an upside-down chair is the same as an upright chair.
+In this paper, we explore ways to apply AutoAugment to real-world datasets. That exploration included measuring the impact of using transfer learning on policies on more datasets, and showing it is possible to automatically find policies that improve classifier performance without the complexities of reinforcement learning used in AutoAugment. 
 
-However, we’ve encountered cases where AutoAugment doesn’t improve model performance significantly or even makes it worse. Our observation is that this happens when the policies used are trained on datasets that are very different in nature. For example, the QuickDraw dataset contains only black and white images, while the SVHN dataset contains color images. So using the full SVHN augmentation that includes transformations like Contrast or Solarize make model performance worse than the baseline. 
+Data augmentation has the potential improves model performance because it enables the model to gain access to training examples that are not present in the training data distribution. For example, in the Iceberg dataset, transfer augmentations effectivly create "new" realtistic iceberg readings that help the CNN better learn invariances. 
+
+However, we’ve encountered cases where AutoAugment transfer learning doesn’t improve model performance significantly or even makes it worse. Our observation is that this happens when the policies used are trained on datasets that are very different in nature. For example, the QuickDraw dataset we used only had greyscale images, while the CIFAR-10 dataset contains color images. So using the CIFAR-10 augmentations that include transformations like Contrast or Solarize make model performance worse than the baseline. 
+
+We also showed the promise of using random search to find good (but not optimal) policies on real-world datasets.  We are including the code in the github repository, and this Simplified AutoAugment implementation can serve as a practical alternative to the original AutoAugment.
 
 \section{Future directions}
 Adding augmentations slows down model training. It happens due to both increased number of images in the training dataset and the fact that transformations happen ‘on the fly’, i.e. the block that picks transformation for the image is a part of the model training code. It would have been possible to diminish this negative effect on the training time by introducing a data pre-processing step before actual model training. It requires additionally storing transformations that were applied to the specific image for the further results analysis.
@@ -262,6 +312,10 @@ via Successive Halving and Classification, 2018.\newline
 
 [6] Vrany, Jirka. My best single model - simple CNN - LB 0.1541. https://www.kaggle.com/jirivrany/my-best-single-model-simple-cnn-lb-0-1541, 2018.\newline
 
+[7] A. Howard, et al. MobileNets: Efficient Convolutional Neural Networks for Mobile Vision
+Applications, 2017. \newline
+
+[8] Beluga. Greyscale MobileNet [LB=0.892]. https://www.kaggle.com/gaborfodor/greyscale-mobilenet-lb-0-892, 2018.\newline
 
 }
 
