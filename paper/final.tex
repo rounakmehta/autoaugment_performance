@@ -153,9 +153,10 @@ The baseline model described above (trained with no augmentation) scored log los
         w/SVHN Non-Color Policies &0.1256  &15.1\%\\  
         \hline
       \end{tabular}
+      \\
+      \caption{Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset.  The Log Loss reported is on the competition public holdout set.}
     \end{table}
 
-Table 1: Results When Transfering CIFAR-10 and SVHN Policies to Training on Iceberg Dataset.  The Log Loss reported is on the competition public holdout set.
 
 To understand the results above, we need to consider the nature of the Iceberg radar/image data.  The original data consists of two 75x75 matrixes with positional radar readings.  These readings are artificially transformed into 2D "images" by transforming them to a color scale between 0 and 255 and adding a 3rd channel which is just the average of the other 2.  So intuitively speaking, the height of the iceberg or ship in the randar data gets mapped to a color in the image, so the 2D image is sort of a bird's eye view of the iceberg or ship.
 
@@ -192,9 +193,11 @@ The baseline classifier is one based on MobileNets [7] and was created by Kaggle
         w/SVHN Non-Color Policies &0.821  \\  
         \hline
       \end{tabular}
+      \\
+      \caption{Results When Transfering CIFAR-10 and SVHN Policies to Training on QuickDraw Dataset.  The Mean Average Precision (MAP@3) is measured on the competition public holdout set.}
     \end{table}
 
-Table 2: Results When Transfering CIFAR-10 and SVHN Policies to Training on QuickDraw Dataset.  The Mean Average Precision (MAP@3) is measured on the competition public holdout set.
+
 
 First a bit about the experiments shown in Table 2.  The Kaggle Kernel based on MobileNets is capable of scoring 0.890 on the competition public leaderboard, and we confirmed this through our own replay of the kernel which took about 8 hours.  Due to the cost of calculating data augmentations during training, however, we found that we needed to reduce the number of epochs used the MobileNet to just 15 epochs so that the experiments with augmentations could run in about 8 hours.  This baseline with 15 epochs scored 0.830, so we decided to use it as our actual baseline.
 
@@ -246,9 +249,11 @@ The policy that produced the best results was as follows:
                 &Invert &0.9 &0.889\\
                 \hline
             \end{tabular}
+            \\
+            \caption{Best policy produced by Random Search Controller.}
         \end{table}
 
-Table 2: Best policy produced by Random Search Controller.
+
 
 Now that we found a good (but probably not optimal) set of policies using Simplified AutoAugment, we put the 5 best policies we found to the test by using them for training the CIFAR-10 Wide-ResNet-28-10 classifier baseline.  The results are shown in Table 3.
 
@@ -263,9 +268,10 @@ Now that we found a good (but probably not optimal) set of policies using Simpli
         Simplified AutoAugment &3.40\%\\
         \hline
       \end{tabular}
+      \\
+      \caption{Performance of Simplified AutoAugment policies on CIFAR-10 Wide-ResNet-28-10.}
     \end{table}
 
-Table 3: Performance of Simplified AutoAugment policies on CIFAR-10 Wide-ResNet-28-10.
 
 The results in Table 3 are very promising for a random search approach to AutoAugment.  It shows that while the random search controller in Simplified AutoAugment does not find policies as optimal as the reinforcement learning approach in AutoAugment (2.68\%), it can still beat the baseline with no augmentation (3.87\%).   
 

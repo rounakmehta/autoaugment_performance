@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  3 DEC 2018 16:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  3 DEC 2018 17:27
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -427,114 +427,123 @@ Underfull \hbox (badness 5696) in paragraph at lines 141--142
 
 [3 <./iceberg_ship_example.png> <./iceberg_aug_example.png> <./iceberg_aug_2d_e
 xample.png>]
-Overfull \hbox (7.16232pt too wide) in paragraph at lines 147--156
+Overfull \hbox (7.16232pt too wide) in paragraph at lines 147--157
 [][] 
  []
 
 
-Underfull \hbox (badness 1142) in paragraph at lines 158--159
-[]\OT1/ptm/m/n/10 Table 1: Re-sults When Trans-fer-ing CIFAR-10 and
+Underfull \hbox (badness 10000) in paragraph at lines 147--157
+
  []
 
 <iceberg_solarize.png, id=41, 857.2025pt x 405.515pt>
 File: iceberg_solarize.png Graphic file (type png)
 <use iceberg_solarize.png>
-Package pdftex.def Info: iceberg_solarize.png  used on input line 166.
+Package pdftex.def Info: iceberg_solarize.png  used on input line 167.
 (pdftex.def)             Requested size: 237.13594pt x 112.18213pt.
 
-Underfull \hbox (badness 1142) in paragraph at lines 197--198
-[]\OT1/ptm/m/n/10 Table 2: Re-sults When Trans-fer-ing CIFAR-10 and
+Underfull \hbox (badness 10000) in paragraph at lines 186--197
+
  []
 
 [4 <./iceberg_solarize.png>]
-<random_search_arch.png, id=49, 745.78625pt x 460.72125pt>
+<random_search_arch.png, id=51, 745.78625pt x 460.72125pt>
 File: random_search_arch.png Graphic file (type png)
 <use random_search_arch.png>
-Package pdftex.def Info: random_search_arch.png  used on input line 215.
+Package pdftex.def Info: random_search_arch.png  used on input line 218.
 (pdftex.def)             Requested size: 237.13594pt x 146.49178pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--253
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 263--272
+
+ []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [5 <./random_search_arch.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 294--295
+Underfull \hbox (badness 10000) in paragraph at lines 300--301
 \OT1/pcr/m/n/10 / / github . com / rounakmehta / autoaugment _
  []
 
 No file final.bbl.
-
-Underfull \hbox (badness 10000) in paragraph at lines 303--304
-
- []
-
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 305--306
-
- []
-
-
-Underfull \hbox (badness 1400) in paragraph at lines 307--308
-[]\OT1/ptm/m/n/9 [3] Ri-cardo Cruz, Au-toAug-ment im-ple-men-ta-tion, GitHub
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 307--308
-
- []
-
 
 Underfull \hbox (badness 10000) in paragraph at lines 309--310
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 311--313
+Underfull \hbox (badness 10000) in paragraph at lines 311--312
+
+ []
+
+[6]
+Underfull \hbox (badness 1400) in paragraph at lines 313--314
+[]\OT1/ptm/m/n/9 [3] Ri-cardo Cruz, Au-toAug-ment im-ple-men-ta-tion, GitHub
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 313--314
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 314--315
+Underfull \hbox (badness 10000) in paragraph at lines 315--316
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 316--318
+Underfull \hbox (badness 10000) in paragraph at lines 317--319
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--320
+Underfull \hbox (badness 10000) in paragraph at lines 320--321
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 322--324
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 325--326
 []\OT1/ptm/m/n/9 [8] Bel-uga. Greyscale Mo-bileNet [LB=0.892].
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--320
+Underfull \hbox (badness 10000) in paragraph at lines 325--326
 \OT1/ptm/m/n/9 https://www.kaggle.com/gaborfodor/greyscale-mobilenet-lb-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--320
+Underfull \hbox (badness 10000) in paragraph at lines 325--326
 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 323.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 329.
 [7
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 323.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 329.
  (./final.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 323.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 323.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 323.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 329.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 329.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 329.
  ) 
 Here is how much of TeX's memory you used:
- 6492 strings out of 492649
- 93949 string characters out of 6129622
+ 6496 strings out of 492649
+ 93977 string characters out of 6129622
  189836 words of memory out of 5000000
  10245 multiletter control sequences out of 15000+600000
  25614 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,9n,27p,1401b,368s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 32i,9n,27p,1401b,370s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
 xlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texl
@@ -542,10 +551,10 @@ ive/2018/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2018
 /texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf-dis
 t/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
 pe1/urw/times/utmri8a.pfb>
-Output written on final.pdf (7 pages, 2351867 bytes).
+Output written on final.pdf (7 pages, 2351951 bytes).
 PDF statistics:
- 102 PDF objects out of 1000 (max. 8388607)
- 76 compressed objects within 1 object stream
- 27 named destinations out of 1000 (max. 500000)
+ 107 PDF objects out of 1000 (max. 8388607)
+ 81 compressed objects within 1 object stream
+ 31 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
