@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  3 DEC 2018 12:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  3 DEC 2018 16:08
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -467,10 +467,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 303--304
 
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6]
+[6]
 Underfull \hbox (badness 10000) in paragraph at lines 305--306
 
  []
