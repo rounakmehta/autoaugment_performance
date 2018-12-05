@@ -254,10 +254,8 @@ The policy that produced the best results was as follows:
         \end{table}
 
 
+Now that we found a good (but probably not optimal) set of policies using Simplified AutoAugment, we put the best policies we found to the test by using them for training the CIFAR-10 Wide-ResNet-28-10 classifier baseline.  The results are shown in Table 4.
 
-Now that we found a good (but probably not optimal) set of policies using Simplified AutoAugment, we put the 5 best policies we found to the test by using them for training the CIFAR-10 Wide-ResNet-28-10 classifier baseline.  The results are shown in Table 3.
-
-\vfill\null
 
     \begin{table}[h]
       \begin{tabular}{lll}
@@ -272,8 +270,7 @@ Now that we found a good (but probably not optimal) set of policies using Simpli
       \caption{Performance of Simplified AutoAugment policies on CIFAR-10 Wide-ResNet-28-10.}
     \end{table}
 
-
-The results in Table 3 are very promising for a random search approach to AutoAugment.  It shows that while the random search controller in Simplified AutoAugment does not find policies as optimal as the reinforcement learning approach in AutoAugment (2.68\%), it can still beat the baseline with no augmentation (3.87\%).   
+The results in Table 4 are very promising for a random search approach to AutoAugment.  It shows that while the random search controller in Simplified AutoAugment does not find policies as optimal as the reinforcement learning approach in AutoAugment (2.68\%), it can still beat the baseline with no augmentation (3.87\%).   
 
 \section{Conclusion}
 
