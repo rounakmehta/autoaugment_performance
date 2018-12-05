@@ -79,7 +79,7 @@ The datasets that met these criteria include:
 
 \begin{itemize}
   \item \textbf{Iceberg Dataset}.  This is an image dataset from the Kaggle “Statoil/C-CORE Iceberg Classifier Challenge".  It contains 1,674 "images" of icebergs and ships that come from radar readings.  
-  \item \textbf{QuickDraw Dataset}.  This is an image dataset from the Kaggle “Quick, Draw! Doodle Recognition Challenge".  It contains over 27 million images of doodles (quick drawings) which belong to 340 categories.  
+  \item \textbf{QuickDraw Dataset}.  This is an image dataset from the Kaggle “Quick, Draw! Doodle Recognition Challenge".  It contains over 50 million images of doodles (quick drawings) which belong to 340 categories.  
   \item \textbf{CIFAR-10 Dataset}.  This is the same canonical dataset used by the authors [1].  We use this for comparing the Simplified AutoAugment performance to that of the Reinforcement Learning AutoAugment.  Although this dataset is not a Kaggle dataset, it is labeled, relatively small, and has many classifier baselines as specified in the AutoAugment paper [1].        
 \end{itemize}
 
@@ -177,7 +177,7 @@ The largest improvement, however, comes when we reduce the SVHN policies by remo
 
 \subsection{QuickDraw Dataset}
 
-The QuickDraw is dataset is a much larger dataset than the Iceberg dataset, consisting of over 27 million images from human drawings or doodles classified into 340 classes.  Each image is 64x64 with 3 color channels.  
+The QuickDraw is dataset is a much larger dataset than the Iceberg dataset, consisting of over 50 million images from human drawings or doodles classified into 340 classes.  Each image is 64x64 with 3 color channels.  
 
 The baseline classifier is one based on MobileNets [7] and was created by Kaggle user Beluga [8].  The most significant aspect of the model is that it uses a preprocessor that converts the original color doodles into greyscale images before feeding those images into a MobileNet.  (This will have an impact on the effectiveness of color augmentation policies)  The Keras implementation of MobileNets is used with a learning rate of 0.002.
 
